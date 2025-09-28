@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Arpan Sarkar | Sports Graphic Designer</title>
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="styles.css" />
+
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+
+    <!-- Tailwind is optional in this project but kept for compatibility -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine (if used in original site) -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js" defer></script>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container container">
+            <a href="#home" class="logo">Arpan<span>Sarkar</span></a>
+            <div class="nav-links">
+                <a href="#home">Home</a>
+                <a href="#about">About</a>
+                <a href="#portfolio">Portfolio</a>
+                <a href="#services">Services</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <button class="menu-btn" aria-label="Open menu">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section id="home" class="hero">
+        <div class="container hero-content">
+            <div class="hero-image">
+                <img src="images/portfolio.jpg" alt="Arpan Sarkar" class="profile-img">
+            </div>
+            <div class="hero-text">
+                <h1 class="hero-title">Arpan Sarkar</h1>
+                <p class="hero-subtitle">Where Creativity Meets Competition</p>
+                <a href="#portfolio" class="cta-button">View Portfolio</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About -->
+    <section id="about" class="about">
+        <div class="container">
+            <h2 class="section-title">About Me</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>I'm a passionate sports graphic designer crafting visuals that capture energy and excitement — posters, branding, social campaigns, merchandise, and more.</p>
+                    <p>My designs focus on storytelling through color, motion, and bold typography so athletes and teams stand out.</p>
+                </div>
+                <div class="about-image">
+                    <img src="images/portfolio.jpg" alt="About image">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Portfolio -->
+    <section id="portfolio" class="portfolio">
+        <div class="container">
+            <h2 class="section-title">Portfolio</h2>
+            <div class="portfolio-grid">
+                <div class="portfolio-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1558611848-73f7eb4001d8?auto=format&fit=crop&w=774&q=80" alt="Basketball Poster Series">
+                    <div class="portfolio-overlay">
+                        <h3>Basketball Poster Series</h3>
+                        <p>Poster Design</p>
+                        <button class="view-project">View Project</button>
+                    </div>
+                </div>
+
+                <div class="portfolio-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1521412644187-c49fa049e84d?auto=format&fit=crop&w=774&q=80" alt="Soccer Team Branding">
+                    <div class="portfolio-overlay">
+                        <h3>Soccer Team Branding</h3>
+                        <p>Branding</p>
+                        <button class="view-project">View Project</button>
+                    </div>
+                </div>
+
+                <div class="portfolio-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1496412705862-e0088f16f791?auto=format&fit=crop&w=774&q=80" alt="Athlete Social Graphics">
+                    <div class="portfolio-overlay">
+                        <h3>Athlete Social Graphics</h3>
+                        <p>Social Media</p>
+                        <button class="view-project">View Project</button>
+                    </div>
+                </div>
+
+                <div class="portfolio-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=774&q=80" alt="Sports Event Promotion">
+                    <div class="portfolio-overlay">
+                        <h3>Sports Event Promotion</h3>
+                        <p>Marketing Materials</p>
+                        <button class="view-project">View Project</button>
+                    </div>
+                </div>
+
+                <div class="portfolio-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1512070801807-7db0be8bba8a?auto=format&fit=crop&w=774&q=80" alt="Team Merchandise">
+                    <div class="portfolio-overlay">
+                        <h3>Team Merchandise</h3>
+                        <p>Product Design</p>
+                        <button class="view-project">View Project</button>
+                    </div>
+                </div>
+
+                <div class="portfolio-item fade-in">
+                    <img src="https://images.unsplash.com/photo-1526401485004-9b8b1b2d4e4b?auto=format&fit=crop&w=774&q=80" alt="Event Teaser Graphics">
+                    <div class="portfolio-overlay">
+                        <h3>Event Teaser Graphics</h3>
+                        <p>Campaign Assets</p>
+                        <button class="view-project">View Project</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services -->
+    <section id="services" class="services">
+        <div class="container">
+            <h2 class="section-title">Services</h2>
+            <div class="services-grid">
+                <div class="service-card fade-in">
+                    <div class="service-icon"><i class="fas fa-file-image"></i></div>
+                    <h3>Sports Posters</h3>
+                    <p>Designing dynamic and eye-catching posters to generate excitement for games and events.</p>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-icon"><i class="fas fa-share-alt"></i></div>
+                    <h3>Social Media Graphics</h3>
+                    <p>Engaging post templates and content for consistent fan engagement across platforms.</p>
+                </div>
+
+                <div class="service-card fade-in">
+                    <div class="service-icon"><i class="fas fa-tshirt"></i></div>
+                    <h3>Merchandise</h3>
+                    <p>Designs for shirts, hoodies, and team merchandise ready for print and web.</p>
+                </div>
+
+                <!-- NEW Service: Logo & Branding -->
+                <div class="service-card fade-in">
+                    <div class="service-icon"><i class="fas fa-shapes"></i></div>
+                    <h3>Logo & Branding</h3>
+                    <p>Logo creation, team identity systems, and full branding kits for long-term recognition.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2 class="section-title">Contact</h2>
+            <div class="contact-content">
+                <form id="contact-form" class="contact-form">
+                    <div class="form-row">
+                        <input type="text" name="name" placeholder="Your Name" required />
+                        <input type="email" name="email" placeholder="Email" required />
+                    </div>
+                    <textarea name="message" placeholder="Message" rows="6" required></textarea>
+                    <button type="submit" class="btn-submit">Send Message</button>
+                </form>
+
+                <aside class="contact-info">
+                    <div class="info-card">
+                        <h4>Reach Out</h4>
+                        <p>Email: <a href="mailto:example@example.com">example@example.com</a></p>
+                        <p>Phone: +91 98308 21146</p>
+                        <p>Based in: Kolkata, India</p>
+
+                        <!-- Social links -->
+                        <div class="social-links">
+                            <a href="https://www.facebook.com/share/1GNVj9skdR/" target="_blank" rel="noopener noreferrer" aria-label="Facebook">
+                                <i class="fab fa-facebook-f"></i> Facebook
+                            </a>
+                            <a href="https://www.instagram.com/offxznox?igsh=MWV2bnFqYXo3emxsNA==" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+                                <i class="fab fa-instagram"></i> Instagram
+                            </a>
+                        </div>
+
+                        <p style="margin-top:.5rem; opacity:.8; font-size:.95rem;">I usually reply within 24–48 hours.</p>
+                    </div>
+                </aside>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container footer-content">
+            <p>© 2025 Arpan Sarkar. All rights reserved.</p>
+            <p style="font-size:0.95em; opacity:0.7;">
+                <a href="https://myprotfolio-flame.vercel.app/" target="_blank" rel="noopener noreferrer">
+                    <i class="fas fa-code"></i> Designed & Developed by Anubhab Das
+                </a>
+            </p>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+</html>
