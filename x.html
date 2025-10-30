@@ -1,0 +1,176 @@
+<!-- Portfolio Gallery - HTML/CSS/JS single-file implementation -->
+
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portfolio Gallery</title>
+  <style>
+    :root{--gap:16px;--bg:#0b0b0b;--modal-bg:rgba(0,0,0,0.9);}
+    body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial;line-height:1.4;margin:0;background:#fafafa;color:#111}
+    .container{max-width:1200px;margin:32px auto;padding:0 16px}
+
+    /* Grid */
+    .grid{display:grid;gap:var(--gap);grid-template-columns:repeat(1,1fr)}
+    @media(min-width:600px){.grid{grid-template-columns:repeat(2,1fr)}}
+    @media(min-width:900px){.grid{grid-template-columns:repeat(3,1fr)}}
+
+    /* Card and 3:4 aspect enforcement */
+    .card{border-radius:12px;overflow:hidden;box-shadow:0 2px 8px rgba(16,24,40,0.06);background:#fff}
+
+    /* Preferred: use aspect-ratio; fallback uses padding-bottom trick */
+    .aspect-box{position:relative;width:100%;aspect-ratio:3/4;overflow:hidden;background:#eee}
+    /* Fallback for browsers without aspect-ratio */
+    .aspect-box.fallback{height:0;padding-bottom:133.3333%}
+
+    .thumb{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block}
+
+    .meta{padding:10px 12px}
+    .title{font-size:14px;font-weight:600;color:#111;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+    /* View button style (optional) */
+    .view-btn{margin-top:8px;display:inline-block;padding:6px 10px;font-size:13px;border-radius:8px;border:1px solid #ddd;background:#fff;cursor:pointer}
+
+    /* Fullscreen modal */
+    .modal{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:var(--modal-bg);z-index:1000;opacity:0;pointer-events:none;transition:opacity .18s ease}
+    .modal.open{opacity:1;pointer-events:auto}
+    .modal .inner{position:relative;max-width:100%;max-height:100%;padding:24px;box-sizing:border-box;display:flex;align-items:center;justify-content:center}
+
+    /* Image in modal fills screen while preserving aspect using contain */
+    .modal img{max-width:100%;max-height:100%;object-fit:contain;border-radius:8px}
+
+    /* Close button */
+    .close-btn{position:absolute;top:18px;right:18px;background:rgba(255,255,255,0.06);border:none;color:#fff;padding:8px;border-radius:999px;backdrop-filter:blur(4px);cursor:pointer}
+
+    /* Caption */
+    .caption{position:absolute;left:50%;transform:translateX(-50%);bottom:18px;color:#fff;background:rgba(0,0,0,0.45);padding:8px 12px;border-radius:8px;font-size:14px}
+
+    /* Accessibility focus ring for keyboard navigation */
+    button:focus, a:focus{outline:3px solid #7c3aed;outline-offset:2px}
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Portfolio</h2>
+
+    <div id="gallery" class="grid" aria-live="polite"></div>
+  </div>
+
+  <!-- Fullscreen modal -->
+  <div id="modal" class="modal" role="dialog" aria-modal="true" aria-hidden="true">
+    <div class="inner" id="modalInner">
+      <button id="closeBtn" class="close-btn" aria-label="Close viewer">✕</button>
+      <img id="modalImg" src="" alt="" />
+      <div id="caption" class="caption" hidden></div>
+    </div>
+  </div>
+
+  <script>
+    // Example images array — replace with your real image paths
+    const images = [
+      { id: 1, src: 'https://picsum.photos/id/1015/1200/1600', title: 'Mountain Project' },
+      { id: 2, src: 'https://picsum.photos/id/1011/1200/1600', title: 'Forest Project' },
+      { id: 3, src: 'https://picsum.photos/id/1005/1200/1600', title: 'City Project' },
+      { id: 4, src: 'https://picsum.photos/id/1003/1200/1600', title: 'Sea Project' },
+      { id: 5, src: 'https://picsum.photos/id/1016/1200/1600', title: 'Desert Project' },
+      { id: 6, src: 'https://picsum.photos/id/1020/1200/1600', title: 'Sky Project' }
+    ];
+
+    const gallery = document.getElementById('gallery');
+    const modal = document.getElementById('modal');
+    const modalImg = document.getElementById('modalImg');
+    const caption = document.getElementById('caption');
+    const closeBtn = document.getElementById('closeBtn');
+
+    // Feature-detect aspect-ratio support; if missing, add fallback class
+    const supportsAspect = CSS.supports('aspect-ratio', '3 / 4');
+
+    function buildCard(img){
+      const card = document.createElement('article');
+      card.className = 'card';
+      card.innerHTML = `
+        <button class="open-btn" data-id="${img.id}" aria-label="View project ${escapeHtml(img.title || img.id)}" style="all:unset;display:block;cursor:pointer">
+          <div class="aspect-box ${supportsAspect? '' : 'fallback'}">
+            <img class="thumb" src="${img.src}" alt="${escapeHtml(img.title || 'Project image')}" loading="lazy"/>
+          </div>
+          <div class="meta">
+            <div class="title">${escapeHtml(img.title || '')}</div>
+            <div><span class="view-btn">View project</span></div>
+          </div>
+        </button>
+      `;
+      return card;
+    }
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"]+/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[m]));
+    }
+
+    // Render gallery
+    images.forEach(img => gallery.appendChild(buildCard(img)));
+
+    // Open modal
+    function openModal(img){
+      modalImg.src = img.src;
+      modalImg.alt = img.title || 'Project image';
+      if(img.title){ caption.textContent = img.title; caption.hidden = false; } else { caption.hidden = true; }
+
+      modal.classList.add('open');
+      modal.setAttribute('aria-hidden', 'false');
+      // prevent background scroll
+      document.documentElement.style.overflow = 'hidden';
+      document.body.style.overflow = 'hidden';
+      // focus close button for accessibility
+      closeBtn.focus();
+    }
+
+    function closeModal(){
+      modal.classList.remove('open');
+      modal.setAttribute('aria-hidden', 'true');
+      modalImg.src = '';
+      // restore scroll
+      document.documentElement.style.overflow = '';
+      document.body.style.overflow = '';
+    }
+
+    // Delegate click on gallery
+    gallery.addEventListener('click', (e)=>{
+      const btn = e.target.closest('.open-btn');
+      if(!btn) return;
+      const id = Number(btn.dataset.id);
+      const img = images.find(x=>x.id===id);
+      if(img) openModal(img);
+    });
+
+    // Close behaviors
+    // click outside image closes modal
+    modal.addEventListener('click', (e)=>{
+      if(e.target === modal) closeModal();
+    });
+
+    closeBtn.addEventListener('click', closeModal);
+
+    // Escape key closes modal
+    document.addEventListener('keydown', (e)=>{
+      if(e.key === 'Escape' && modal.classList.contains('open')){
+        closeModal();
+      }
+    });
+
+    // Accessibility: trap focus inside modal when open (basic)
+    document.addEventListener('focus', function(event){
+      if(!modal.classList.contains('open')) return;
+      if(!modal.contains(event.target)){
+        event.stopPropagation();
+        closeBtn.focus();
+      }
+    }, true);
+
+    // If you want the modal image to cover the entire screen (no letterboxing),
+    // replace object-fit:contain with object-fit:cover and set width/height to 100%.
+    // That will crop images to fill the screen. Currently we use contain to preserve full image.
+
+  </script>
+</body>
+</html>
