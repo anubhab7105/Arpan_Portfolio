@@ -77,7 +77,8 @@ nav.scrolled { background: rgba(2,6,23,0.92); box-shadow: 0 6px 18px rgba(2,6,23
     background: #0b1220;
 
     /* Preferred modern approach */
-    aspect-ratio: 3 / 4;
+    width: 195px;
+    height: 260px;
 
     /* Fallback spacer for older browsers */
     display: block;
