@@ -66,10 +66,12 @@ nav.scrolled { background: rgba(2,6,23,0.92); box-shadow: 0 6px 18px rgba(2,6,23
     align-items: start;
 }
 
-/* Card: aspect ratio with fallback for older browsers / mobile */
+/* ---------- Robust portfolio card (aspect-ratio + fallback + clipping fixes) ---------- */
+
+/* Card: aspect ratio with robust clipping & stacking context */
 .portfolio-item {
     position: relative;
-    overflow: hidden;
+    overflow: hidden;               /* clip children to radius */
     border-radius: 10px;
     cursor: pointer;
     background: #0b1220;
@@ -77,29 +79,35 @@ nav.scrolled { background: rgba(2,6,23,0.92); box-shadow: 0 6px 18px rgba(2,6,23
     /* Preferred modern approach */
     aspect-ratio: 3 / 4;
 
-    /* Fallback: create intrinsic ratio using ::before when aspect-ratio not supported */
-    /* we'll rely on ::before to give the box height, and absolutely position the img inside */
+    /* Fallback spacer for older browsers */
     display: block;
+
+    /* create stacking/paint context to ensure clipping on mobile */
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
+    -webkit-transform-style: preserve-3d;
+            transform-style: preserve-3d;
 }
 
-/* Fallback spacer - only used when needed (keeps layout stable) */
+/* Fallback spacer - keeps intrinsic height when aspect-ratio unsupported */
 .portfolio-item::before {
     content: "";
     display: block;
     width: 100%;
-
     /* height = width * (4/3) -> 133.333% */
     padding-top: 133.333%;
 }
 
-/* Ensure contents stack on top of spacer */
+/* Ensure contents stack on top of spacer and are positioned to be clipped */
 .portfolio-item > * {
     position: absolute;
     inset: 0;
     display: block;
+    /* ensure children inherit parent's border radius clipping on some UA */
+    border-radius: inherit;
 }
 
-/* Image fills the absolute box with cover cropping */
+/* Image fills the absolute box with cover cropping and robust clipping */
 .portfolio-item img {
     position: absolute;
     top: 0;
@@ -111,11 +119,37 @@ nav.scrolled { background: rgba(2,6,23,0.92); box-shadow: 0 6px 18px rgba(2,6,23
     min-width: 100%;
     min-height: 100%;
     transition: transform .4s ease;
-    backface-visibility: hidden; /* small perf help on some mobile */
+    backface-visibility: hidden;
     -webkit-backface-visibility: hidden;
+
+    /* match parent border radius so some browsers clip correctly */
+    border-radius: inherit;
+
+    /* extra clip fallback for Safari/older mobile browsers */
+    -webkit-clip-path: inset(0 round 10px);
+            clip-path: inset(0 round 10px);
+
+    /* create its own stacking context for transforms */
+    -webkit-transform: translateZ(0);
+            transform: translateZ(0);
 }
-.portfolio-item:hover img,
-.portfolio-item:focus-within img { transform: scale(1.05); }
+
+/* Hover / focus scale (desktop) */
+@media (hover: hover) and (pointer: fine) {
+    .portfolio-item:hover img,
+    .portfolio-item:focus-within img {
+        transform: scale(1.05);
+    }
+}
+
+/* On small screens, avoid scale to prevent bleeding/edge artifacts */
+@media (max-width: 680px) {
+    .portfolio-item img {
+        transition: none;
+        transform: none !important;
+    }
+    .portfolio-overlay { padding: 1rem; }
+}
 
 /* Overlay content also absolutely positioned */
 .portfolio-overlay {
@@ -124,9 +158,10 @@ nav.scrolled { background: rgba(2,6,23,0.92); box-shadow: 0 6px 18px rgba(2,6,23
     background: rgba(2,6,23,0.88);
     display:flex; flex-direction:column; justify-content:center; align-items:center;
     padding:1.6rem; text-align:center; opacity:0; transition: opacity .28s ease;
+    pointer-events: none; /* prevents accidental taps from toggling focus; inner buttons will remain clickable */
 }
 .portfolio-item:hover .portfolio-overlay,
-.portfolio-item:focus-within .portfolio-overlay { opacity:1; }
+.portfolio-item:focus-within .portfolio-overlay { opacity:1; pointer-events: auto; }
 .portfolio-overlay h3 { font-size:1.4rem; margin-bottom:.35rem; color:#f8fafc; }
 .portfolio-overlay p { color:#cbd5e1; margin-bottom:.9rem; }
 
@@ -216,7 +251,7 @@ footer { padding:2rem 0; border-top:1px solid rgba(255,255,255,0.03); margin-top
     .portfolio-overlay { padding: 1rem; }
 }
 
-/* Touch devices */
+/* Touch devices: show overlay by default because :hover isn't available */
 @media (hover: none) and (pointer: coarse) {
-    .portfolio-overlay { opacity: 1 !important; }
+    .portfolio-overlay { opacity: 1 !important; pointer-events: auto; }
 }
