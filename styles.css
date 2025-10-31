@@ -57,44 +57,76 @@ nav.scrolled { background: rgba(2,6,23,0.92); box-shadow: 0 6px 18px rgba(2,6,23
 /* Portfolio */
 .portfolio { padding:3rem 0; }
 
-/* Ensures consistent and clean grid with even rows */
+/* Grid: responsive and consistent rows */
 .portfolio-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); /* keeps items reasonable on small screens */
     gap: 1.2rem;
     margin-top: 1rem;
     align-items: start;
 }
 
-/* Each project card maintains a 3:4 shape */
+/* Card: aspect ratio with fallback for older browsers / mobile */
 .portfolio-item {
     position: relative;
     overflow: hidden;
     border-radius: 10px;
     cursor: pointer;
     background: #0b1220;
+
+    /* Preferred modern approach */
     aspect-ratio: 3 / 4;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+    /* Fallback: create intrinsic ratio using ::before when aspect-ratio not supported */
+    /* we'll rely on ::before to give the box height, and absolutely position the img inside */
+    display: block;
 }
 
+/* Fallback spacer - only used when needed (keeps layout stable) */
+.portfolio-item::before {
+    content: "";
+    display: block;
+    width: 100%;
+
+    /* height = width * (4/3) -> 133.333% */
+    padding-top: 133.333%;
+}
+
+/* Ensure contents stack on top of spacer */
+.portfolio-item > * {
+    position: absolute;
+    inset: 0;
+    display: block;
+}
+
+/* Image fills the absolute box with cover cropping */
 .portfolio-item img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
+    min-width: 100%;
+    min-height: 100%;
     transition: transform .4s ease;
+    backface-visibility: hidden; /* small perf help on some mobile */
+    -webkit-backface-visibility: hidden;
 }
-.portfolio-item:hover img { transform: scale(1.05); }
+.portfolio-item:hover img,
+.portfolio-item:focus-within img { transform: scale(1.05); }
 
+/* Overlay content also absolutely positioned */
 .portfolio-overlay {
-    position:absolute; inset:0;
+    position:absolute;
+    inset:0;
     background: rgba(2,6,23,0.88);
     display:flex; flex-direction:column; justify-content:center; align-items:center;
     padding:1.6rem; text-align:center; opacity:0; transition: opacity .28s ease;
 }
-.portfolio-item:hover .portfolio-overlay { opacity:1; }
+.portfolio-item:hover .portfolio-overlay,
+.portfolio-item:focus-within .portfolio-overlay { opacity:1; }
 .portfolio-overlay h3 { font-size:1.4rem; margin-bottom:.35rem; color:#f8fafc; }
 .portfolio-overlay p { color:#cbd5e1; margin-bottom:.9rem; }
 
@@ -179,6 +211,9 @@ footer { padding:2rem 0; border-top:1px solid rgba(255,255,255,0.03); margin-top
     .portfolio-grid { grid-template-columns: 1fr; }
     .services-grid { grid-template-columns: 1fr; }
     .form-row { grid-template-columns: 1fr; }
+
+    /* Slightly reduce overlay padding on very small screens */
+    .portfolio-overlay { padding: 1rem; }
 }
 
 /* Touch devices */
